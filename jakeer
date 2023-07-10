@@ -1,0 +1,315 @@
+<html>
+<head>
+    <title>Indian Chief Ministers Dashboard</title>
+    <style>
+        /* CSS styles */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: lightgreen; /* Set the background color */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 10px;  background-color: lightgreen; /* Set the background color */
+        }
+
+        #searchButton {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: red; /* Set the background color */
+            color: white; /* Set the search icon color */
+        }
+
+
+        #cmContainer {
+            margin-top: 20px;
+        }
+
+        .cm-profile {
+            margin-bottom: 20px;
+            display: none; /* Initially hide the profiles */
+        }
+
+        .cm-profile.show {
+            display: block; /* Display the profiles when shown */
+        }
+
+        .cm-profile h3 {
+            margin-bottom: 5px;
+        }
+
+        .cm-profile p {
+            margin: 0;
+        }
+
+        .cm-profile a {
+            color: #0366d6;
+        }
+
+        #notFoundMessage {
+            display: none; /* Initially hide the "Data not found" message */
+            color: blue;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Indian Chief Ministers Dashboard</h1>
+        <div>
+            <input type="text" id="searchInput" placeholder="Search chief ministers by name or state">
+            <button id="searchButton" onclick="searchData()">Search</button>
+        </div>
+        <div id="cmContainer"></div>
+        <p id="notFoundMessage">Data not found</p>
+    </div>
+
+    <script>
+        // JavaScript code
+        const chiefMinisters = [
+            {
+                name: 'Pema Khandu',
+                state: 'Arunachal Pradesh',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Pema_Khandu',
+                twitter: 'https://twitter.com/PemaKhanduBJP'
+            },
+            {
+                name: 'Prithviraj Chavan',
+                state: 'Maharashtra',
+                party: 'Indian National Congress',
+                wikipedia: 'https://en.wikipedia.org/wiki/Prithviraj_Chavan',
+                twitter: 'https://twitter.com/PrithviShaw'
+            },
+            {
+                name: 'Mamata Banerjee',
+                state: 'West Bengal',
+                party: 'All India Trinamool Congress',
+                wikipedia: 'https://en.wikipedia.org/wiki/Mamata_Banerjee',
+                twitter: 'https://twitter.com/MamataOfficial'
+            },
+            {
+                name: 'Naveen Patnaik',
+                state: 'Odisha',
+                party: 'Biju Janata Dal',
+                wikipedia: 'https://en.wikipedia.org/wiki/Naveen_Patnaik',
+                twitter: 'https://twitter.com/Naveen_Odisha'
+            },
+            {
+                name: 'Nitish Kumar',
+                state: 'Bihar',
+                party: 'Janata Dal (United)',
+                wikipedia: 'https://en.wikipedia.org/wiki/Nitish_Kumar',
+                twitter: 'https://twitter.com/NitishKumar'
+            },
+            {
+                name: 'K. Chandrashekar Rao',
+                state: 'Telangana',
+                party: 'Telangana Rashtra Samithi',
+                wikipedia: 'https://en.wikipedia.org/wiki/K._Chandrashekar_Rao',
+                twitter: 'https://twitter.com/trspartyonline'
+            },
+            {
+                name: 'Arvind Kejriwal',
+                state: 'Delhi',
+                party: 'Aam Aadmi Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Arvind_Kejriwal',
+                twitter: 'https://twitter.com/ArvindKejriwal'
+            },
+            {
+                name: 'Ashok Gehlot',
+                state: 'Rajasthan',
+                party: 'Indian National Congress',
+                wikipedia: 'https://en.wikipedia.org/wiki/Ashok_Gehlot',
+                twitter: 'https://twitter.com/ashokgehlot51'
+            },
+            {
+                name: 'Captain Amarinder Singh',
+                state: 'Punjab',
+                party: 'Indian National Congress',
+                wikipedia: 'https://en.wikipedia.org/wiki/Amarinder_Singh',
+                twitter: 'https://twitter.com/capt_amarinder'
+            },
+            {
+                name: 'Edappadi K. Palaniswami',
+                state: 'Tamil Nadu',
+                party: 'All India Anna Dravida Munnetra Kazhagam',
+                wikipedia: 'https://en.wikipedia.org/wiki/Edappadi_K._Palaniswami',
+                twitter: 'https://twitter.com/EPSTamilNadu'
+            },
+            {
+                name: 'Hemant Soren',
+                state: 'Jharkhand',
+                party: 'Jharkhand Mukti Morcha',
+                wikipedia: 'https://en.wikipedia.org/wiki/Hemant_Soren',
+                twitter: 'https://twitter.com/HemantSorenJMM'
+            },
+            {
+                name: 'Jai Ram Thakur',
+                state: 'Himachal Pradesh',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Jai_Ram_Thakur',
+                twitter: 'https://twitter.com/jairamthakurbjp'
+            },
+            {
+                name: 'Manohar Lal Khattar',
+                state: 'Haryana',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Manohar_Lal_Khattar',
+                twitter: 'https://twitter.com/mlkhattar'
+            },
+            {
+                name: 'Manik Sarkar',
+                state: 'Tripura',
+                party: 'Communist Party of India (Marxist)',
+                wikipedia: 'https://en.wikipedia.org/wiki/Manik_Sarkar',
+                twitter: 'https://twitter.com/ManikSarkarCPM'
+            },
+            {
+                name: 'Mukul Sangma',
+                state: 'Meghalaya',
+                party: 'Indian National Congress',
+                wikipedia: 'https://en.wikipedia.org/wiki/Mukul_Sangma',
+                twitter: 'https://twitter.com/MukulSangmaINC'
+            },
+            {
+                name: 'N. Biren Singh',
+                state: 'Manipur',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/N._Biren_Singh',
+                twitter: 'https://twitter.com/NBirenSingh'
+            },
+            {
+                name: 'Neiphiu Rio',
+                state: 'Nagaland',
+                party: 'Nationalist Democratic Progressive Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Neiphiu_Rio',
+                twitter: 'https://twitter.com/neiphiurio'
+            },
+            {
+                name: 'Naveen Patnaik',
+                state: 'Odisha',
+                party: 'Biju Janata Dal',
+                wikipedia: 'https://en.wikipedia.org/wiki/Naveen_Patnaik',
+                twitter: 'https://twitter.com/Naveen_Odisha'
+            },
+            {
+                name: 'Nitish Kumar',
+                state: 'Bihar',
+                party: 'Janata Dal (United)',
+                wikipedia: 'https://en.wikipedia.org/wiki/Nitish_Kumar',
+                twitter: 'https://twitter.com/NitishKumar'
+            },
+            {
+                name: 'Pema Khandu',
+                state: 'Arunachal Pradesh',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Pema_Khandu',
+                twitter: 'https://twitter.com/PemaKhanduBJP'
+            },
+            {
+                name: 'Prithviraj Chavan',
+                state: 'Maharashtra',
+                party: 'Indian National Congress',
+                wikipedia: 'https://en.wikipedia.org/wiki/Prithviraj_Chavan',
+                twitter: 'https://twitter.com/PrithviShaw'
+            },
+            {
+                name: 'Sarbananda Sonowal',
+                state: 'Assam',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Sarbananda_Sonowal',
+                twitter: 'https://twitter.com/sarbanandsonwal'
+            },
+            {
+                name: 'Shivraj Singh Chouhan',
+                state: 'Madhya Pradesh',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Shivraj_Singh_Chouhan',
+                twitter: 'https://twitter.com/ChouhanShivraj'
+            },
+            {
+                name: 'Trivendra Singh Rawat',
+                state: 'Uttarakhand',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Trivendra_Singh_Rawat',
+                twitter: 'https://twitter.com/tsrawatbjp'
+            },
+            {
+                name: 'V. Narayanasamy',
+                state: 'Puducherry',
+                party: 'Indian National Congress',
+                wikipedia: 'https://en.wikipedia.org/wiki/V._Narayanasamy',
+                twitter: 'https://twitter.com/VNBJP'
+            },
+            {
+                name: 'Vijay Rupani',
+                state: 'Gujarat',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Vijay_Rupani',
+                twitter: 'https://twitter.com/VijayRupaniBJP'
+            },
+            {
+                name: 'Y. S. Jaganmohan Reddy',
+                state: 'Andhra Pradesh',
+                party: 'Yuvajana Sramika Rythu Congress Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Y._S._Jaganmohan_Reddy',
+                twitter: 'https://twitter.com/ysjagan'
+            },
+            {
+                name: 'Yogi Adityanath',
+                state: 'Uttar Pradesh',
+                party: 'Bharatiya Janata Party',
+                wikipedia: 'https://en.wikipedia.org/wiki/Yogi_Adityanath',
+                twitter: 'https://twitter.com/myogiadityanath'
+            }
+        ];
+
+        function renderChiefMinisters(filteredCMs) {
+            const cmContainer = document.getElementById('cmContainer');
+            const notFoundMessage = document.getElementById('notFoundMessage');
+
+            cmContainer.innerHTML = '';
+            notFoundMessage.style.display = 'none';
+
+            if (filteredCMs.length === 0) {
+                notFoundMessage.style.display = 'block';
+            } else {
+                filteredCMs.forEach(cm => {
+                    const cmDiv = document.createElement('div');
+                    cmDiv.classList.add('cm-profile', 'show'); // Add "show" class to display the profiles
+                    cmDiv.innerHTML = `
+                        <h3>${cm.name}</h3>
+                        <p>State: ${cm.state}</p>
+                        <p>Party: ${cm.party}</p>
+                        <p><a href="${cm.wikipedia}" target="_blank">Wikipedia</a></p>
+                        <p>${cm.twitter ? `Twitter: <a href="${cm.twitter}" target="_blank">${cm.twitter}</a>` : 'Twitter: N/A'}</p>
+                        <hr>
+                    `;
+                    cmContainer.appendChild(cmDiv);
+                });
+            }
+        }
+
+        function searchData() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCMs = chiefMinisters.filter(cm => {
+                const name = cm.name.toLowerCase();
+                const state = cm.state.toLowerCase();
+                return name.includes(searchTerm) || state.includes(searchTerm);
+            });
+            renderChiefMinisters(filteredCMs);
+        }
+    </script>
+</body>
+</html>
